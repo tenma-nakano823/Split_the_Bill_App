@@ -18,4 +18,10 @@ class MemberEventPaid extends Model
     {
         return $this->belongsTo(Event::class);  
     }
+    
+    protected $fillable = [
+        'event_id',
+        'member_id',
+        'amount',
+    ];
 }

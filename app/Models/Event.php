@@ -23,4 +23,9 @@ class Event extends Model
     {
         return $this->hasMany(MemberEventPaid::class);  
     }
+    
+    protected $fillable = [
+        'name',
+        'group_id',
+    ];
 }

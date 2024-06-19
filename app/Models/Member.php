@@ -28,4 +28,11 @@ class Member extends Model
     {
         return $this->hasMany(MemberEventPaid::class);  
     }
+    
+    protected $fillable = [
+        'group_id',
+        'user_id',
+        'lend',
+        'borrow',
+    ];
 }
