@@ -14,16 +14,16 @@
                         <div class='event'>
                             <h2 class='name'>
                                 <h3>イベントの名前</h3>
-                                <a href="/groups/{{ $group->id }}/events/{{ $event->id }}">{{ $event->name }}</a>
+                                <a href="/events/{{ $event->id }}">{{ $event->name }}</a>
                             </h2>
                             <div class="edit">
-                                <a href="/groups/{{ $group->id }}/events/{{ $event->id }}/edit">編集</a>
+                                <a href="/events/{{ $event->id }}/edit">編集</a>
                             </div>
                         </div>
                     @endforeach
         </div>
         <div class="footer">
-            <a href="/">戻る</a>
+            <a href="/home">戻る</a>
         </div>
     </body>
 </html>

@@ -23,6 +23,7 @@ class GroupRequest extends FormRequest
     {
         return [
             'group.name' => 'required|string|max:100',
+            'users_array' => 'required',
         ];
     }
 }

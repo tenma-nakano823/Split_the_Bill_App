@@ -5,10 +5,11 @@
     </head>
     <body>
         <h1>新しいイベント</h1>
-        <form action="/groups/{{ $group->id }}/events" method="POST">
+        <form action="/events" method="POST">
             @csrf
             <div class="name">
                 <h2>イベント名</h2>
+                <input type="hidden" name="event[group_id]" value="{{ $group->id }}"/>
                 <input type="text" name="event[name]" placeholder="グループ名" value="{{ old('event.name') }}"/>
                 <p class="name__error" style="color:red">{{ $errors->first('event.name') }}</p>
             </div>

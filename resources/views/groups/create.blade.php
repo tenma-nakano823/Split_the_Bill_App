@@ -19,8 +19,23 @@
                 <textarea name="group[member]" placeholder="memberを追加方式で追加_未実装"></textarea>
             </div>
             -->
+            <div>
+                <h2>追加するメンバー</h2>
+                @foreach($users as $user)
+        
+                    <label>
+                        {{-- valueを'$subjectのid'に、nameを'配列名[]'に --}}
+                        <input type="checkbox" value="{{ $user->id }}" name="users_array[]"
+                            @if(Auth::user()->name == $user->name) checked @endif>
+                            {{$user->name}}
+                        </input>
+                    </label>
+                    
+                @endforeach     
+                <p class="user__error" style="color:red">{{ $errors->first('users_array') }}</p>
+            </div>
             <input type="submit" value="保存"/>
         </form>
-        <div class="back">[<a href="/">戻る</a>]</div>
+        <div class="back">[<a href="/home">戻る</a>]</div>
     </body>
 </html>
