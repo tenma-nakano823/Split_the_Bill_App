@@ -25,20 +25,19 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::controller(GroupController::class)->middleware(['auth'])->group(function(){
-    Route::get('/','index')->name('index');
-    Route::post('/groups','store')->name('store');
-    Route::get('/groups/create','create')->name('create');
-    Route::get('/groups/{group}','show')->name('show');
-    Route::get('/groups/{group}/edit','edit')->name('edit');
-    Route::put('/groups/{group}','update')->name('update');
+    Route::get('/home','index')->name('user.index');
+    Route::post('/groups','store')->name('group.store');
+    Route::get('/groups/create','create')->name('group.create');
+    Route::get('/groups/{group}','show')->name('group.show');
+    Route::get('/groups/{group}/edit','edit')->name('group.edit');
+    Route::put('/groups/{group}','update')->name('group.update');
 });
 
 Route::controller(EventController::class)->middleware(['auth'])->group(function(){
-    //Route::get('/groups/{group}','index')->name('index');
-    Route::post('/groups/{group}/events','store')->name('store');
-    Route::get('/groups/{group}/events/create','create')->name('create');
-    Route::get('/groups/{group}/events/{event}/edit','edit')->name('edit');
-    Route::put('/groups/{group}/events/{event}/','update')->name('update');
+    Route::post('/events','store')->name('event.store');
+    Route::get('/groups/{group}/events/create','create')->name('event.create');
+    Route::get('/events/{event}/edit','edit')->name('event.edit');
+    Route::put('/events/{event}','update')->name('event.update');
 });
 
 Route::middleware('auth')->group(function () {

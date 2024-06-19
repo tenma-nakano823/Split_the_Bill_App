@@ -15,30 +15,28 @@ class EventController extends Controller
         return view('events.index')->with(['events' => $event->get()]);  
     }*/
     
-    public function create(Group $group, Event $event)
+    public function create(Group $group)
     {
         return view('events.create')->with(['group' => $group]);
     }
     
-    public function store(Event $event, Group $group, EventRequest $request)
+    public function store(Event $event, EventRequest $request)
     {
         $input = $request['event'];
-        $event->name = $input['name'];
-        $event->group_id = $group->id;
-        $event->save();
-        return redirect('/groups/'. $group->id);
+        $event->fill($input)->save();
+        return redirect('/groups/'. $event->group->id);
     }
     
-    public function edit(Event $event, Group $group)
+    public function edit(Event $event)
     {
         //return view('events.edit', compact('group', 'events'));
         return view('events.edit')->with(['event' => $event]);
     }
     
-    public function update(Event $event, Group $group, EventRequest $request)
+    public function update(Event $event, EventRequest $request)
     {
         $input_event = $request['event'];
         $event->fill($input_event)->save();
-        return redirect('/groups/'. $group->id);
+        return redirect('/groups/'. $event->group->id);
     }
 }
