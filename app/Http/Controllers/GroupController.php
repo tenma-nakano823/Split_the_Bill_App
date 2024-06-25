@@ -25,7 +25,6 @@ class GroupController extends Controller
         }
         $users = User::all();
         return view('groups.index', compact('users','groups'));
-        //return view('groups.index')->with(['groups' => $groups]);  
     }
     
     /**
@@ -55,28 +54,64 @@ class GroupController extends Controller
         $input = $request['group'];
         $input_members = $request->users_array;
         $group->fill($input)->save();
+        
+        $users = User::all();
         foreach($input_members as $input_member){
             $member = new Member();
             $member->group_id = $group->id;
             $member->user_id = $input_member;
             $member->lend = 0.00;
             $member->borrow = 0.00;
+            foreach($users as $user){
+                if($input_member == $user->id){
+                    $member->name = $user->name;
+                    break 1;
+                }
+            }
             $member->save();
         }
         return redirect('/groups/' . $group->id);
         
     }
     
-    public function edit(Group $group)
+    public function edit(Group $group,)
     {
-        return view('groups.edit')->with(['group' => $group]);
+        $members = Member::where('group_id', $group->id)->get();
+        return view('groups.edit', compact('members','group'));
     }
     
     public function update(GroupRequest $request, Group $group)
     {
         $input_group = $request['group'];
         $group->fill($input_group)->save();
-    
-        return redirect('/groups/' . $group->id);
+        /*
+        //group編集画面でメンバーを追加、削除できるようにするか(memberテーブルにdelete_atなし)
+        $input_members = $request->users_array;
+        $members = Member::where('group_id', $group->id)->get();
+        foreach($members as $member){
+            if(!(in_array($member->user_id, $input_members))){
+                $member->delete();
+            }
+        }
+        $add_members = array_diff($input_members, $members->user_id); //新たに追加するメンバー
+        $add_members = array_values($add_members); //indexを詰める
+        
+        $users = User::all();
+        foreach($add_members as $add_member){
+            $member = new Member();
+            $member->group_id = $group->id;
+            $member->user_id = $add_member;
+            $member->lend = 0.00;
+            $member->borrow = 0.00;
+            foreach($users as $user){
+                if($add_member == $user->id){
+                    $member->name = $user->name;
+                    break 1;
+                }
+            }
+            $member->save();
+        }
+        */
+        return redirect('/home');
     }
 }

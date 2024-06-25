@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Event;
+use App\Models\Member;
 use App\Http\Requests\EventRequest;
 //use Illuminate\Http\Request;
 
@@ -24,7 +25,9 @@ class EventController extends Controller
     {
         $input = $request['event'];
         $event->fill($input)->save();
-        return redirect('/groups/'. $event->group->id);
+        //$members = Member::where('group_id', $event->group_id)->get();
+        //return view('member_event_pays.create', compact('event','members'));
+        return redirect('/member_event_pays/create/events/'. $event->id);
     }
     
     public function edit(Event $event)

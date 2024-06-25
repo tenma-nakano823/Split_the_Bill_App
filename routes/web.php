@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GroupController; 
 use App\Http\Controllers\EventController; 
+use App\Http\Controllers\MemberEventPayController; 
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,12 @@ Route::controller(EventController::class)->middleware(['auth'])->group(function(
     Route::get('/groups/{group}/events/create','create')->name('event.create');
     Route::get('/events/{event}/edit','edit')->name('event.edit');
     Route::put('/events/{event}','update')->name('event.update');
+});
+
+//Route::controller(MemberEventPayController::class)->middleware(['auth'])->group(function(){
+Route::controller(MemberEventPayController::class)->group(function(){
+    Route::post('/member_event_pays','store')->name('member_event_pays.store');
+    Route::get('/member_event_pays/create/events/{event}','create')->name('member_event_pays.create');
 });
 
 Route::middleware('auth')->group(function () {
