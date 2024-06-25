@@ -1,10 +1,12 @@
 <x-app-layout>
-    <x-slot name="title">トップページタイトル</x-slot>
-    <x-slot name="header">トップページヘッダー</x-slot>
-    <h1>Group Name</h1>
-    <a href='/groups/create'>New Group</a>
+    <x-slot name="title">Split the Bill</x-slot>
+    <!--<x-slot name="header">参加中のグループ</x-slot>-->
+    <h1>参加中のグループ</h1>
+    <br>
+    [<a href='/groups/create'>新規グループ作成</a>]
     <div class='groups'>
         @foreach ($groups as $group)
+            <br>
             <div class='group'>
                 <h2 class='name'>
                     <a href="/groups/{{ $group->id }}">{{ $group->name }}</a>
@@ -19,7 +21,7 @@
                 
                 </h5>
                 <div class="edit">
-                    <a href="/groups/{{ $group->id }}/edit">編集</a>
+                    [<a href="/groups/{{ $group->id }}/edit">編集</a>]
                 </div>
             </div>
         @endforeach

@@ -22,5 +22,6 @@ class MemberEventPay extends Model
     protected $fillable = [
         'event_id',
         'member_id',
+        'amount',
     ];
 }
