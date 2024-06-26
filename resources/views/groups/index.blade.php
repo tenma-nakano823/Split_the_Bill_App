@@ -4,7 +4,7 @@
     <h1>参加中のグループ</h1>
     <br>
     [<a href='/groups/create'>新規グループ作成</a>]
-    <div class='groups'>
+    <div class='bg-red-300 mx-auto'>
         @foreach ($groups as $group)
             <br>
             <div class='group'>

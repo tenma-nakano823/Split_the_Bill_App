@@ -8,7 +8,7 @@
         @foreach ($group->events as $event)
             <br>
             <div class='event'>
-                <h2 class='name'><a href="/events/{{ $event->id }}">{{ $event->name }}</a></h2>
+                <h2 class='name'>{{ $event->name }}</h2>
                 <div class="edit">
                     [<a href="/events/{{ $event->id }}/edit">編集</a>]
                 </div>
