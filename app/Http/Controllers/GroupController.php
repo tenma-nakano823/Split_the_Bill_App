@@ -6,6 +6,8 @@ use App\Models\Group;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Member;
+use App\Models\MemberEventPay;
+use App\Models\MemberEventPaid;
 use App\Http\Requests\GroupRequest;
 use Illuminate\Support\Facades\Auth;
 //use Illuminate\Http\Request;
@@ -38,7 +40,54 @@ class GroupController extends Controller
         //$groupWithMembers = $group->load('events');
         //return view('groups.show')->with('group', $groupWithMembers);
         $events = $group->events;
-        return view('groups.show', compact('group', 'events'));
+        
+        //lend
+        $members = $group->members;
+        foreach($members as $member){
+            $sum_lend = 0;
+            $member_event_pays = MemberEventPay::where('member_id', $member->id)->get();
+            if($member_event_pays->count()){
+                foreach($member_event_pays as $member_event_pay){
+                    $sum_lend += $member_event_pay->amount;
+                }
+            $member->lend = $sum_lend;
+            }
+        }
+        
+        //borrow
+        foreach($members as $member){
+            $member->borrow = 0;
+        }
+        foreach($events as $event){
+            $sum_amount = 0;
+            $count_member = 0;
+            $member_event_pays = MemberEventPay::where('event_id', $event->id)->get();
+            if($member_event_pays->count()){
+                foreach($member_event_pays as $member_event_pay){
+                    $sum_amount += $member_event_pay->amount;
+                }
+                $member_event_paids = MemberEventPaid::where('event_id', $event->id)->get();
+                $count_member = $member_event_paids->count();
+                $extra = $sum_amount % $count_member;
+                foreach($member_event_paids as $member_event_paid){
+                    foreach($members as $member){
+                        if($member_event_paid->member_id == $member->id){
+                            $member->borrow += floor($sum_amount / $count_member);
+                        }
+                        if($extra != 0){
+                            $member->borrow += $extra;
+                            $extra = 0;
+                        }
+                    }
+                }
+            }
+        }
+        foreach($members as $member){
+            $member->save();
+        }
+        
+        $members = $group->members;
+        return view('groups.show', compact('group', 'events', 'members'));
         //return view('events.index')->with(['events' => $event->get()]);
         //groups.showにしてたのを変更してみた
     }

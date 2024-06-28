@@ -24,5 +24,6 @@ class MemberEventPaid extends Model
     protected $fillable = [
         'event_id',
         'member_id',
+        'is_fraction_adjust' => 'boolean',
     ];
 }
