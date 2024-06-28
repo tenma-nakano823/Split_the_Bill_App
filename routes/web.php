@@ -32,6 +32,7 @@ Route::controller(GroupController::class)->middleware(['auth'])->group(function(
     Route::get('/groups/{group}','show')->name('group.show');
     Route::get('/groups/{group}/edit','edit')->name('group.edit');
     Route::put('/groups/{group}','update')->name('group.update');
+    Route::delete('/groups/{group}','delete')->name('group.delete');
 });
 
 Route::controller(EventController::class)->middleware(['auth'])->group(function(){
@@ -39,6 +40,7 @@ Route::controller(EventController::class)->middleware(['auth'])->group(function(
     Route::get('/groups/{group}/events/create','create')->name('event.create');
     Route::get('/events/{event}/edit','edit')->name('event.edit');
     Route::put('/events/{event}','update')->name('event.update');
+    Route::delete('/events/{event}','delete')->name('group.delete');
 });
 
 //Route::controller(MemberEventPayController::class)->middleware(['auth'])->group(function(){

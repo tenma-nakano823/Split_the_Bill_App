@@ -28,10 +28,35 @@
             @endforeach  
             <p class="user__error" style="color:red">{{ $errors->first('member_event_paids_array') }}</p>
         </div>
+        <br>
+        <div class="fraction">
+            <h2>端数調整人</h2>
+            <h5>※必ず一人選択してください</h5>
+            @foreach($members as $member)
+                <label>
+                    <input type="radio" value="{{ $member->id }}" name="fraction_adjust">
+                        {{$member->name}}
+                    </input>
+                </label>
+            @endforeach  
+            <p class="user__error" style="color:red">{{ $errors->first('fraction_adjust') }}</p>
+        </div>
         <input type="submit" value="[保存]"/>
     </form>
-    <div class="back">
-        <br>
-        [<a href="/groups/{{ $event->group_id }}">戻る</a>]
-    </div>
+    <script>
+        function deletePost(id) {
+            'use strict'
+    
+            if (confirm('作成したイベントを削除します。\n本当に削除しますか？')) {
+                document.getElementById(`form_${id}`).submit();
+            }
+        }
+    </script>
+    <form action="/events/{{ $event->id }}" id="form_{{ $event->id }}" method="post">
+        @csrf
+        @method('DELETE')
+        <div class="back">
+            <button type="button" onclick="deletePost({{ $event->id }})">[戻る]</button>
+        </div>
+    </form>
 </x-app-layout>

@@ -5,6 +5,18 @@
     <br>
     [<a href='/groups/{{ $group->id }}/events/create'>新規イベント作成</a>]
     <div class="content">
+        <div class="grid grid-cols-3 gap-4">
+            <div class="bg-white col-span-1">Name</div>
+            <div class="bg-white col-span-1">Lend</div>
+            <div class="bg-white col-span-1">Borrow</div>
+        </div>
+        @foreach ($members as $member)
+            <div class="grid grid-cols-3 gap-4">
+                <div class="bg-white col-span-1">{{ $member->name }}</div>
+                <div class="bg-white col-span-1">{{ $member->lend }}</div>
+                <div class="bg-white col-span-1">{{ $member->borrow }}</div>
+            </div>
+        @endforeach
         @foreach ($group->events as $event)
             <br>
             <div class='event'>

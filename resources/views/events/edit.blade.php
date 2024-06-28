@@ -33,6 +33,20 @@
             @endforeach  
             <p class="user__error" style="color:red">{{ $errors->first('member_event_paids_array') }}</p>
         </div>
+        <br>
+        <div class="fraction">
+            <h2>端数調整人</h2>
+            <h5>※必ず一人選択してください</h5>
+            @foreach($members as $member)
+                <label>
+                    <input type="radio" value="{{ $member->id }}" name="fraction_adjust"
+                        @if($isFractionAdjusts[$loop->index]) checked @endif>
+                        {{$member->name}}
+                    </input>
+                </label>
+            @endforeach  
+            <p class="user__error" style="color:red">{{ $errors->first('fraction_adjust') }}</p>
+        </div>
         <input type="submit" value="[保存]"/>
     </form>
     <div class="back">
