@@ -41,7 +41,7 @@ class GroupController extends Controller
         //return view('groups.show')->with('group', $groupWithMembers);
         $events = $group->events;
         
-        //lend
+        //lendについて
         $members = $group->members;
         foreach($members as $member){
             $sum_lend = 0;
@@ -54,7 +54,7 @@ class GroupController extends Controller
             }
         }
         
-        //borrow
+        //borrowについて
         foreach($members as $member){
             $member->borrow = 0;
         }
@@ -73,10 +73,9 @@ class GroupController extends Controller
                     foreach($members as $member){
                         if($member_event_paid->member_id == $member->id){
                             $member->borrow += floor($sum_amount / $count_member);
-                        }
-                        if($extra != 0){
-                            $member->borrow += $extra;
-                            $extra = 0;
+                            if($member_event_paid->is_fraction_adjust){//端数調整
+                                $member->borrow += $extra;
+                            }
                         }
                     }
                 }
@@ -87,7 +86,49 @@ class GroupController extends Controller
         }
         
         $members = $group->members;
-        return view('groups.show', compact('group', 'events', 'members'));
+        //お金のやり取りを記録
+        $nameArray = [];
+        $lendborrowArray = [];
+        $resultArray = [];
+        
+        
+        foreach($members as $member){
+            $nameArray[] = $member->name; //array_push()の方が処理が遅いらしい
+            $calculate_money = $member->lend - $member->borrow;
+            $lendborrowArray[] =$calculate_money;
+        }
+        //渡す人ともらう人のキーを取得
+        for($i=0; $i < count($lendborrowArray);  $i++){
+            if ($lendborrowArray[$i] != 0){
+                for($j=$i;  $j < count($lendborrowArray);  $j++){
+                    if($lendborrowArray[$j] < 0){
+                        $give_key = $j;
+                        break 1;
+                    }
+                }
+                for($j=$i;  $j < count($lendborrowArray);  $j++){
+                    if($lendborrowArray[$j] > 0){
+                        $get_key = $j;
+                        break 1;
+                    }
+                }
+                
+                if(abs($lendborrowArray[$give_key]) >= $lendborrowArray[$get_key]){
+                    $move_money = $lendborrowArray[$get_key];
+                    $lendborrowArray[$give_key] += $move_money;
+                    $lendborrowArray[$get_key] = 0;
+                } else {
+                    $move_money = abs($lendborrowArray[$give_key]);
+                    $lendborrowArray[$give_key] = 0;
+                    $lendborrowArray[$get_key] -= $move_money;
+                }
+                $move_money = number_format($move_money);
+                $resultArray[] = array('give_name'=>$nameArray[$give_key], 'get_name'=>$nameArray[$get_key], 'money'=>$move_money);
+                $i--;
+            }
+        }
+        
+        return view('groups.show', compact('group', 'events', 'members', 'resultArray'));
         //return view('events.index')->with(['events' => $event->get()]);
         //groups.showにしてたのを変更してみた
     }
