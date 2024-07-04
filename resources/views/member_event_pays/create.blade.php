@@ -1,47 +1,65 @@
 <x-app-layout>
     <x-slot name="title">{{ $event->name }}</x-slot>
     <!--<x-slot name="header">参加中のグループ</x-slot>-->
-    <h1>{{ $event->name }}</h1>
+    <div class="mt-12 px-32 text-center text-blue-500">
+        <h1 style="font-size: 36px; font-weight: 900;" >
+            {{ $event->name }}
+        </h1>
+    </div>
     <br>
     <form action="/member_event_pays" method="POST">
         @csrf
-        <div class="pay">
-            <h2>支払う金額</h2>
+        <div class="px-32">
+            <div class="mt-10 text-left text-blue-500">
+                <h1 style="font-size: 24px; font-weight: 700;">支払う金額</h1>
+            </div>
             <input type="hidden" name="group_id" value="{{ $event->group_id }}"/>
             <input type="hidden" name="member_event_pay[event_id]" value="{{ $event->id }}"/>
             @foreach($members as $member)
-                <h5>{{ $member->name }}</h5>
-                <input type="hidden" name="member_event_pays_array[{{ $loop->index }}][member_id]" value="{{ $member->id }}"/>
-                <input type="text" name="member_event_pays_array[{{ $loop->index }}][amount]" placeholder="円"/>
+                <div class="my-5 grid grid-cols-1 flex items-center">
+                    <div class="col-span-1 text-left">
+                        <p class="text-black" style="font-size: 24px;">{{ $member->name }}</p>
+                    </div>
+                    <div class="col-span-1">
+                        <input type="hidden" name="member_event_pays_array[{{ $loop->index }}][member_id]" value="{{ $member->id }}"/>
+                        <input type="text" class="bg-white w-full text-black mx-auto rounded px-4 py-2 text-xl text-right" name="member_event_pays_array[{{ $loop->index }}][amount]" placeholder="円"/>
+                    </div>
+                </div>
             @endforeach
             <p class="name__error" style="color:red">{{ $errors->first('member_event_pays_array.*.amount') }}</p>
         </div>
         <br>
-        <div class="paid">
-            <h2>割り勘に参加するメンバー</h2>
+        <div class="px-32">
+            <div class="mt-5 text-left text-blue-500">
+                <h1 style="font-size: 24px; font-weight: 700;">割り勘に参加するメンバー</h1>
+            </div>
             @foreach($members as $member)
                 <label>
                     <input type="checkbox" value="{{ $member->id }}" name="member_event_paids_array[]">
-                        {{$member->name}}
+                        <a class="mr-5" style="font-size: 20px; font-weight: 500;">{{$member->name}}</a>
                     </input>
                 </label>
             @endforeach  
             <p class="user__error" style="color:red">{{ $errors->first('member_event_paids_array') }}</p>
         </div>
         <br>
-        <div class="fraction">
-            <h2>端数調整人</h2>
-            <h5>※必ず一人選択してください</h5>
+        <div class="px-32">
+            <div class="mt-5 text-left text-blue-500">
+                <h1 style="font-size: 24px; font-weight: 700;">端数調整人</h1>
+                <h1 style="font-size: 20px; font-weight: 500;">※必ず一人のみ選択してください</h1>
+            </div>
             @foreach($members as $member)
                 <label>
                     <input type="radio" value="{{ $member->id }}" name="fraction_adjust">
-                        {{$member->name}}
+                        <a class="mr-5" style="font-size: 20px; font-weight: 500;">{{$member->name}}</a>
                     </input>
                 </label>
             @endforeach  
             <p class="user__error" style="color:red">{{ $errors->first('fraction_adjust') }}</p>
         </div>
-        <input type="submit" value="[保存]"/>
+        <div class="mt-10 px-32">
+            <input type="submit" class="bg-blue-500 w-full text-white mx-auto rounded px-4 py-2 text-xl text-center" value="保存">
+        </div>
     </form>
     <script>
         function deletePost(id) {
@@ -55,8 +73,10 @@
     <form action="/events/{{ $event->id }}" id="form_{{ $event->id }}" method="post">
         @csrf
         @method('DELETE')
-        <div class="back">
-            <button type="button" onclick="deletePost({{ $event->id }})">[戻る]</button>
+        <div class="mt-5 px-32 flex justify-center">
+            <button type="button" 
+                    class="bg-white w-full text-blue-500 border-4 border-blue-500 mx-auto rounded px-4 py-2 text-xl text-center"　
+                    onclick="deletePost({{ $event->id }})">戻る</button>
         </div>
     </form>
 </x-app-layout>
