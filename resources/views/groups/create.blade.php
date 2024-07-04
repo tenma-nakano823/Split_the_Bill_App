@@ -24,7 +24,7 @@
                     {{-- valueを'$subjectのid'に、nameを'配列名[]'に --}}
                     <input type="checkbox" value="{{ $user->id }}" name="users_array[]"
                         @if(Auth::user()->name == $user->name) checked @endif>
-                        {{$user->name}}
+                        <a style="font-size: 20px; font-weight: 500;">{{$user->name}}</a>
                     </input>
                 </label>
                 
