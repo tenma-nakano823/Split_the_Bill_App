@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\MemberEventPay;
 use App\Models\MemberEventPaid;
 use App\Http\Requests\GroupRequest;
+use App\Http\Requests\SearchRequest;
 use Illuminate\Support\Facades\Auth;
 //use Illuminate\Http\Request;
 
@@ -25,10 +26,29 @@ class GroupController extends Controller
                 $groups->push($group);
             }
         }
+        
+        $groups = $groups->sortByDesc('updated_at');
         $users = User::all();
         return view('groups.index', compact('users','groups'));
     }
     
+    public function search(SearchRequest $request)
+    {
+        $query = $request->input('query');
+        $selectedUserIds = $request->input('selected_user_ids', []);
+    
+        $users = User::where('name', 'LIKE', "%{$query}%")
+                    ->whereNotIn('id', $selectedUserIds)
+                    ->get();
+    
+        $results = '<div class="flex flex-wrap">';
+        foreach ($users as $user) {
+            $results .= '<div class="bg-white  text-blue-500 border-2 border-blue-500 mx-auto rounded px-4 py-2 text-xl text-center"><a href="#" class="add-user" style="font-size: 20px; font-weight: 500;" data-id="' . $user->id . '" data-name="' . $user->name . '">' . $user->name . '</a></div>';
+        }
+        $results .= '</div>';
+    
+        return response()->json($results);
+    }
     /**
      * 特定IDのgroupを表示する
      *
@@ -39,10 +59,14 @@ class GroupController extends Controller
     {
         //$groupWithMembers = $group->load('events');
         //return view('groups.show')->with('group', $groupWithMembers);
-        $events = $group->events;
+        $events = $group->getByGroup();
         
         //lendについて
         $members = $group->members;
+        foreach($members as $member){
+            $member->lend = 0;
+            $member->borrow = 0;
+        }
         foreach($members as $member){
             $sum_lend = 0;
             $member_event_pays = MemberEventPay::where('member_id', $member->id)->get();
@@ -81,6 +105,7 @@ class GroupController extends Controller
                 }
             }
         }
+        
         foreach($members as $member){
             $member->save();
         }
@@ -164,7 +189,7 @@ class GroupController extends Controller
         
     }
     
-    public function edit(Group $group,)
+    public function edit(Group $group)
     {
         $members = Member::where('group_id', $group->id)->get();
         return view('groups.edit', compact('members','group'));
@@ -172,18 +197,32 @@ class GroupController extends Controller
     
     public function update(GroupRequest $request, Group $group)
     {
+        $memberId = [];
         $input_group = $request['group'];
         $group->fill($input_group)->save();
-        /*
-        //group編集画面でメンバーを追加、削除できるようにするか(memberテーブルにdelete_atなし)
+        
+        //group編集画面でメンバーを追加、削除できるようにする
         $input_members = $request->users_array;
         $members = Member::where('group_id', $group->id)->get();
         foreach($members as $member){
+            array_push($memberId, $member->user_id);
             if(!(in_array($member->user_id, $input_members))){
+                $events = Event::where('group_id', $member->group_id)->get();
+                foreach($events as $event){
+                    $member_event_pays = MemberEventPay::where('event_id', $event->id)->get();
+                    $member_event_paids = MemberEventPaid::where('event_id', $event->id)->get();
+                    foreach($member_event_pays as $member_event_pay){
+                        $member_event_pay->delete();
+                    }
+                    foreach($member_event_paids as $member_event_paid){
+                        $member_event_paid->delete();
+                    }
+                    $event->delete();
+                }
                 $member->delete();
             }
         }
-        $add_members = array_diff($input_members, $members->user_id); //新たに追加するメンバー
+        $add_members = array_diff($input_members, $memberId); //新たに追加するメンバー
         $add_members = array_values($add_members); //indexを詰める
         
         $users = User::all();
@@ -201,7 +240,13 @@ class GroupController extends Controller
             }
             $member->save();
         }
-        */
+        
+        return redirect('/home');
+    }
+    
+    public function delete(Group $group)
+    {
+        $group->delete();
         return redirect('/home');
     }
 }

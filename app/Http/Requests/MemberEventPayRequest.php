@@ -23,7 +23,7 @@ class MemberEventPayRequest extends FormRequest
     {
         return [
             'member_event_pays_array.*.amount' => 'nullable|integer|min:0',
-            'member_event_paids_array' => 'required',
+            'member_event_paids_array' => 'required|array|min:2',
             'fraction_adjust' => 'required',
         ];
     }

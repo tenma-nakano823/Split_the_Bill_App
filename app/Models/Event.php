@@ -11,6 +11,12 @@ class Event extends Model
     use HasFactory;
     use SoftDeletes;
     
+    public function orderByEvent()
+    {
+        // updated_atで降順に並べたあと、limitで件数制限をかける
+        return $this->orderBy('updated_at', 'DESC')->get();
+    }
+    
     public function group()   
     {
         return $this->belongsTo(Group::class);  

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GroupRequest extends FormRequest
+class SearchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,8 @@ class GroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'group.name' => 'required|string|max:100',
-            'users_array' => 'required|array|min:2',
+            'query',
+            'selected_user_ids',
         ];
     }
 }
