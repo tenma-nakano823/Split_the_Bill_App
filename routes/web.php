@@ -28,6 +28,7 @@ Route::get('/dashboard', function () {
 Route::controller(GroupController::class)->middleware(['auth'])->group(function(){
     Route::get('/home','index')->name('user.index');
     Route::post('/groups','store')->name('group.store');
+    Route::get('/search-users','search')->name('group.search');
     Route::get('/groups/create','create')->name('group.create');
     Route::get('/groups/{group}','show')->name('group.show');
     Route::get('/groups/{group}/edit','edit')->name('group.edit');

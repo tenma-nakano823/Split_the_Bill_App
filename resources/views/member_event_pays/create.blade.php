@@ -62,7 +62,7 @@
         </div>
     </form>
     <script>
-        function deletePost(id) {
+        function deleteEvent(id) {
             'use strict'
     
             if (confirm('作成したイベントを削除します。\n本当に削除しますか？')) {
@@ -76,7 +76,7 @@
         <div class="mt-5 px-32 flex justify-center">
             <button type="button" 
                     class="bg-white w-full text-blue-500 border-4 border-blue-500 mx-auto rounded px-4 py-2 text-xl text-center"　
-                    onclick="deletePost({{ $event->id }})">戻る</button>
+                    onclick="deleteEvent({{ $event->id }})">戻る</button>
         </div>
     </form>
 </x-app-layout>

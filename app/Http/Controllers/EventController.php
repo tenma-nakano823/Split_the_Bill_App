@@ -36,11 +36,33 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $members = Member::where('group_id', $event->group_id)->get();
+        $memberId = [];
+        $memberEventPayId = [];
         $memberEventPays = [];
         $memberEventPaids = [];
         $isCheckeds = [];
         $isFractionAdjusts = [];
-                
+        
+        foreach ($members as $member) {
+            array_push($memberId, $member->id);
+            $memberEventPay = MemberEventPay::where('event_id', $event->id)->where('member_id', $member->id)->first();
+            if ($memberEventPay) {
+                array_push($memberEventPayId, $memberEventPay->member_id);
+            }
+        }
+        
+        $add_members = array_diff($memberId, $memberEventPayId); //新たに追加するメンバー
+        $add_members = array_values($add_members); //indexを詰める
+        
+        foreach($add_members as $add_member){
+            $member_event_pay = new MemberEventPay();
+            $member_event_pay->event_id = $event->id;
+            $member_event_pay->member_id = $add_member;
+            $member_event_pay->amount = 0;
+            $member_event_pay->save();
+        }
+            
+            
         foreach ($members as $member) {
             $memberEventPay = MemberEventPay::where('event_id', $event->id)->where('member_id', $member->id)->first();
             $memberEventPaid = MemberEventPaid::where('event_id', $event->id)->where('member_id', $member->id)->first();
@@ -60,6 +82,7 @@ class EventController extends Controller
                 array_push($isFractionAdjusts, false);
             }
         }
+        
         return view('events.edit', compact('members','event','memberEventPays','memberEventPaids','isCheckeds','isFractionAdjusts'));
         //return view('events.edit')
     }
@@ -77,6 +100,9 @@ class EventController extends Controller
     public function update(Event $event, MemberEventPay $member_event_pay, MemberEventPaid $member_event_paid, EventRequest $eventRequest, MemberEventPayRequest $membereventpayRequest)
     {
         $memberId = [];
+        $input_event = $eventRequest['event'];
+        $event->fill($input_event)->save();
+        
         $input_member_event_paids = $membereventpayRequest->member_event_paids_array;
         $input_fraction_adjust = $membereventpayRequest->fraction_adjust;
         // 端数調整人が選択されたメンバーに含まれているかを確認
@@ -177,7 +203,16 @@ class EventController extends Controller
     }
     public function delete(Event $event)
     {
+        $member_event_pays = MemberEventPay::where('event_id', $event->id)->get();
+        $member_event_paids = MemberEventPaid::where('event_id', $event->id)->get();
+        foreach($member_event_pays as $member_event_pay){
+            $member_event_pay->delete();
+        }
+        foreach($member_event_paids as $member_event_paid){
+            $member_event_paid->delete();
+        }
         $event->delete();
+        
         return redirect('/groups/' . $event->group_id);
     }
 }
