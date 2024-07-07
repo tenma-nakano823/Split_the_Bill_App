@@ -1,4 +1,4 @@
-# グル割り(href=https://guruwari-2db54c26b26e.herokuapp.com)
+# [グル割り](href=https://guruwari-2db54c26b26e.herokuapp.com)
 
 ## アプリケーションの説明
 このアプリでは、お金の貸し借りを簡単に記録し、自動的に割り勘計算を行なってくれます。<br>
