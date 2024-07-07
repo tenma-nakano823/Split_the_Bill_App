@@ -1,6 +1,6 @@
 # グル割り
 
-##アプリケーションの説明
+## アプリケーションの説明
 このアプリでは、お金の貸し借りを簡単に記録し、自動的に割り勘計算を行なってくれます。<br>
 最初に、アカウントを登録しグループを作成します。<br>
 グループ作成のメンバー追加は、検索ボックスで登録されているユーザーのIDを検索し、追加します。<br>
@@ -11,13 +11,15 @@
 大学生活において、友達と旅行や飲み会などで遊びに行くとき、割り勘が発生する機会が多いです。「メモ帳を使ってお金の貸し借りを記録する。」「計算機アプリを使って割り勘計算する。」「お金のやり取りに時間がかかる。」といった問題が生じるため、今回のアプリ開発を目指しました。
 
 ## 実行環境
-<a href=https://guruwari-2db54c26b26e.herokuapp.com>
+heroku上で実行<a href=https://guruwari-2db54c26b26e.herokuapp.com>
 
 ## テストデータ
-- ユーザ名：test_user1 E-mail:test1@gmail.com PASS:test1_user
-- ユーザ名：test_user2 E-mail:test2@gmail.com PASS:test2_user
-- ユーザ名：test_user3 E-mail:test3@gmail.com PASS:test3_user
-- ユーザ名：test_user4 E-mail:test4@gmail.com PASS:test4_user
+| user_name | E-Mail | PASSWORD |
+| --- | --- | ---|
+| test_user1 | test1@gmail.com | test1_user |
+| test_user2 | test2@gmail.com | test2_user |
+| test_user3 | test3@gmail.com | test3_user |
+| test_user4 | test4@gmail.com | test4_user |
 
 ## 拡張予定の機能
 - 割り勘の際に割合を設定する。(ある人は80%など)
